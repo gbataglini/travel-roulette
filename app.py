@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 from travelAPI import addUser, selectUser, addDestination, getDestinations, searchDestination
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')
@@ -35,6 +37,7 @@ def allDestinations():
 
 
 @app.route('/destinations', methods=['POST'])
+@cross_origin(origins=['*'])
 def newDestination():
     new_destination = request.get_json()
     destination = addDestination(new_destination)
