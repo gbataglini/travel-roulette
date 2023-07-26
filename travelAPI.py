@@ -121,3 +121,47 @@ def searchDestination(destinationID):
     }
 
     return selectedDestination
+
+#Randomly pick destination 
+
+def getRandomDestination(): 
+    dbName = 'travelr'
+    dbConnection = connectToDB(dbName)
+    cur = dbConnection.cursor()
+    query = """
+    SELECT destinationID, destinationName, status FROM destinations 
+    WHERE userID = 1
+    ORDER BY RAND()
+    LIMIT 1;
+    """
+    cur.execute(query)
+    destination = cur.fetchone()   
+    if destination is None:
+        return None
+    
+    selectedDestination = {
+        'destinationID': destination[0],
+        'destinationName': destination[1],
+        'status': destination[2]
+    }
+    return selectedDestination
+
+#Change destination status 
+
+def newDestinationStatus(reqBody, destinationID): 
+    dbName = 'travelr'
+    dbConnection = connectToDB(dbName)
+    cur = dbConnection.cursor()
+    query = """
+    UPDATE destinations
+    SET status = %s
+    WHERE userID = 1 AND destinationID = %s;
+    """
+    values = (
+        reqBody['status'],
+        destinationID,
+    )
+    cur.execute(query, values)
+    dbConnection.commit()
+    cur.close()
+    return searchDestination(destinationID) 
