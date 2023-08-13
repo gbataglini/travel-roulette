@@ -165,3 +165,16 @@ def newDestinationStatus(reqBody, destinationID):
     dbConnection.commit()
     cur.close()
     return searchDestination(destinationID) 
+
+#Delete destination 
+def deleteDestination(destinationID): 
+    dbName = 'travelr'
+    dbConnection = connectToDB(dbName)
+    cur = dbConnection.cursor()
+    query = """
+    DELETE FROM destinations
+    WHERE userID = 1 AND destinationID = %s;
+    """
+    cur.execute(query, (destinationID, ))
+    dbConnection.commit()
+    cur.close()
