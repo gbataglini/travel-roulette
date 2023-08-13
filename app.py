@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from travelAPI import addUser, selectUser, addDestination, getDestinations, searchDestination, getRandomDestination, newDestinationStatus
+from travelAPI import addUser, selectUser, addDestination, getDestinations, searchDestination, getRandomDestination, newDestinationStatus, deleteDestination
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -53,6 +53,11 @@ def newStatus(destinationID):
     reqBody = request.get_json()
     currentStatus = newDestinationStatus(reqBody, destinationID)
     return currentStatus
+
+@app.route('/api/v1/destinations/<int:destinationID>', methods=['DELETE'])
+def deleteDest(destinationID): 
+    deleteDestination(destinationID)
+    return ('', 204)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
